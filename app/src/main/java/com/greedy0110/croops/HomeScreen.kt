@@ -1,6 +1,9 @@
 package com.greedy0110.croops
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
@@ -16,7 +19,9 @@ import androidx.compose.ui.unit.dp
 import com.greedy0110.croops.ui.theme.CroopsTheme
 
 @Composable
-fun MyScoreCard() {
+fun MyScoreCard(
+    gaugeUnits: List<GaugeUnit> = listOf(GaugeUnit(1f, Color.Red)),
+) {
     Surface(
         color = Color.White,
         shape = MaterialTheme.shapes.medium,
@@ -35,13 +40,16 @@ fun MyScoreCard() {
                 Icon(imageVector = Icons.Filled.ArrowForward, contentDescription = null)
             }
 
-            Box(
+            CircleGauge(
                 modifier = Modifier
                     .padding(top = 15.dp, bottom = 20.dp)
-                    .size(130.dp, 130.dp)
+                    .size(130.dp, 130.dp),
+                gaugeUnits = gaugeUnits
             ) {
-                CircleGauge()
-                Column(modifier = Modifier.align(Alignment.Center)) {
+                Column(
+                    modifier = Modifier
+                        .align(Alignment.Center)
+                ) {
                     Text(text = "60점")
                     Text(text = "\uD83C\uDF31새싹 농부")
                 }
@@ -59,7 +67,14 @@ fun MyScoreCard() {
 @Preview
 @Composable
 fun PreviewMyScoreCard() {
+    val gaugeUnits = listOf(
+        GaugeUnit(0.14f, Color(0xffFADF4B)),
+        GaugeUnit(0.4f, Color(0xffE8E8E8)),
+        GaugeUnit(0.15f, Color(0xff1FCEA0)),
+        GaugeUnit(0.31f, Color(0xff599CEE)),
+    )
+
     CroopsTheme {
-        MyScoreCard()
+        MyScoreCard(gaugeUnits = gaugeUnits)
     }
 }
