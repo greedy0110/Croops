@@ -22,14 +22,26 @@ import com.greedy0110.croops.ui.theme.*
 val Blue599 = Color(0xff599CEE)
 val Blue059 = Color(0x7f05196E)
 
+data class MyScoreData(
+    val score: Int,
+    val names: List<String>,
+    val colors: List<Color>
+)
+
 @Composable
 fun MyScoreCard(
+    modifier: Modifier,
     gaugeUnits: List<GaugeUnit> = listOf(GaugeUnit(1f, Color.Red)),
+    data: MyScoreData
 ) {
+    val score = data.score
+    val names = data.names
+    val colors = data.colors
+
     Surface(
         color = Color.White,
         shape = MaterialTheme.shapes.medium,
-        modifier = Modifier.fillMaxWidth(0.5f),
+        modifier = modifier.aspectRatio(0.7f),
         elevation = 4.dp
     ) {
         Column(
@@ -66,13 +78,14 @@ fun MyScoreCard(
                     Text(
                         text = buildAnnotatedString {
                             withStyle(SpanStyle(fontSize = 24.sp)) {
-                                append("60")
+                                append("$score")
                             }
                             withStyle(SpanStyle(fontSize = 14.sp)) {
                                 append("점")
                             }
                         },
                         style = MaterialTheme.typography.h3,
+                        fontWeight = FontWeight.Medium,
                         color = Blue0519
                     )
                     Text(
@@ -85,12 +98,6 @@ fun MyScoreCard(
             }
 
             Row {
-                val names = listOf("상추", "지토", "무화과")
-                val colors = listOf(
-                    Color(0xff1FCEA0),
-                    Color(0xff599CEE),
-                    Color(0xffFADF4B)
-                )
                 for (i in names.indices) {
                     val name = names[i]
                     TextWithDot(text = name, color = colors[i])
@@ -125,7 +132,7 @@ fun TextWithDot(modifier: Modifier = Modifier, text: String, color: Color) {
     }
 }
 
-//@Preview(showBackground = true)
+@Preview(showBackground = true)
 @Composable
 fun PreviewTextWithDot() {
     CroopsTheme {
@@ -133,7 +140,7 @@ fun PreviewTextWithDot() {
     }
 }
 
-//@Preview(showBackground = true)
+@Preview(showBackground = true)
 @Composable
 fun PreviewMyScoreCard() {
     val gaugeUnits = listOf(
@@ -143,9 +150,24 @@ fun PreviewMyScoreCard() {
         GaugeUnit(0.31f, Color(0xff599CEE)),
     )
 
+    val data = MyScoreData(
+        60,
+        listOf("상추", "지토", "무화과"),
+        listOf(
+            Color(0xff1FCEA0),
+            Color(0xff599CEE),
+            Color(0xffFADF4B)
+        )
+    )
+
     CroopsTheme {
         Box(modifier = Modifier.size(300.dp), contentAlignment = Alignment.Center) {
-            MyScoreCard(gaugeUnits = gaugeUnits)
+            MyScoreCard(
+                modifier = Modifier
+                    .fillMaxWidth(0.5f),
+                gaugeUnits = gaugeUnits,
+                data = data
+            )
         }
     }
 }
@@ -176,7 +198,7 @@ fun CroopCard(modifier: Modifier = Modifier, croopData: CroopData) {
     Surface(
         color = color,
         shape = MaterialTheme.shapes.medium,
-        modifier = modifier,
+        modifier = modifier.aspectRatio(0.7f),
         elevation = 4.dp
     ) {
         Column(
@@ -285,14 +307,12 @@ fun PreviewCroopCard() {
             CroopCard(
                 modifier = Modifier
                     .fillMaxWidth(0.5f)
-                    .aspectRatio(0.7f)
                     .weight(1f),
                 croopData = croop1
             )
             CroopCard(
                 modifier = Modifier
                     .fillMaxWidth(0.5f)
-                    .aspectRatio(0.7f)
                     .weight(1f),
                 croopData = croop2
             )
