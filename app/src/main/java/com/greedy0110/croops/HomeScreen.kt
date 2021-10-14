@@ -6,14 +6,14 @@ import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -27,7 +27,8 @@ fun MyScoreCard(
     Surface(
         color = Color.White,
         shape = MaterialTheme.shapes.medium,
-        modifier = Modifier.size(164.dp, 234.dp)
+        modifier = Modifier.fillMaxWidth(0.5f),
+        elevation = 4.dp
     ) {
         Column(
             modifier = Modifier.padding(
@@ -35,7 +36,8 @@ fun MyScoreCard(
                 end = 16.dp,
                 top = 20.dp,
                 bottom = 14.dp
-            )
+            ),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Row {
                 Text(
@@ -44,13 +46,14 @@ fun MyScoreCard(
                     style = MaterialTheme.typography.subtitle1,
                     color = Grey2C
                 )
-                Icon(imageVector = Icons.Filled.ArrowForward, contentDescription = null)
+                Icon(painter = painterResource(id = R.drawable.ic_arrow), contentDescription = null)
             }
 
             CircleGauge(
                 modifier = Modifier
                     .padding(top = 15.dp, bottom = 20.dp)
-                    .size(130.dp, 130.dp),
+                    .fillMaxWidth()
+                    .aspectRatio(1f),
                 gaugeUnits = gaugeUnits
             ) {
                 Column(
@@ -73,22 +76,31 @@ fun MyScoreCard(
                     Text(
                         text = "\uD83C\uDF31새싹 농부",
                         style = MaterialTheme.typography.caption,
+                        fontWeight = FontWeight.SemiBold,
                         color = Grey5
                     )
                 }
             }
 
             Row {
-                TextWithDot(text = "상추", modifier = Modifier.weight(1f))
-                TextWithDot(text = "지토", modifier = Modifier.weight(1f))
-                TextWithDot(text = "무화과", modifier = Modifier.weight(1f))
+                val names = listOf("상추", "지토", "무화과")
+                val colors = listOf(
+                    Color(0xff1FCEA0),
+                    Color(0xff599CEE),
+                    Color(0xffFADF4B)
+                )
+                for (i in names.indices) {
+                    val name = names[i]
+                    TextWithDot(text = name, color = colors[i])
+                    if (i != names.lastIndex) Spacer(modifier = Modifier.size(8.dp))
+                }
             }
         }
     }
 }
 
 @Composable
-fun TextWithDot(modifier: Modifier = Modifier, text: String) {
+fun TextWithDot(modifier: Modifier = Modifier, text: String, color: Color) {
     Row(
         modifier = modifier,
         verticalAlignment = Alignment.CenterVertically
@@ -97,11 +109,11 @@ fun TextWithDot(modifier: Modifier = Modifier, text: String) {
         Canvas(modifier = Modifier.size(circleRadius * 2)) {
             val radius = size.minDimension / 2
             drawCircle(
-                color = Color(0xff1FCEA0),
+                color = color,
                 radius = radius,
             )
         }
-        Spacer(modifier = Modifier.size(4.dp))
+        Spacer(modifier = Modifier.size(3.dp))
         Text(
             text = text,
             style = MaterialTheme.typography.caption,
@@ -113,13 +125,13 @@ fun TextWithDot(modifier: Modifier = Modifier, text: String) {
 
 @Preview(showBackground = true)
 @Composable
-fun PreivewTextWithDot() {
+fun PreviewTextWithDot() {
     CroopsTheme {
-        TextWithDot(text = "상추")
+        TextWithDot(text = "상추", color = Color(0xffFADF4B))
     }
 }
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 fun PreviewMyScoreCard() {
     val gaugeUnits = listOf(
@@ -130,6 +142,8 @@ fun PreviewMyScoreCard() {
     )
 
     CroopsTheme {
-        MyScoreCard(gaugeUnits = gaugeUnits)
+        Box(modifier = Modifier.size(300.dp), contentAlignment = Alignment.Center) {
+            MyScoreCard(gaugeUnits = gaugeUnits)
+        }
     }
 }

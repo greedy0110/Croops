@@ -57,7 +57,7 @@ fun CircleGauge(
     }
 }
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 fun PreviewCircleGauge() {
     val gaugeUnits = listOf(
