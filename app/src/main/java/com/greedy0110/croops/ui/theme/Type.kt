@@ -16,10 +16,16 @@ val Gmarket = FontFamily(
 
 // Set of Material typography styles to start with
 val Typography = Typography(
+    defaultFontFamily = FontFamily.SansSerif,
     body1 = TextStyle(
         fontFamily = FontFamily.Default,
         fontWeight = FontWeight.Normal,
         fontSize = 16.sp
+    ),
+    body2 = TextStyle(
+        fontFamily = FontFamily.Default,
+        fontWeight = FontWeight.Normal,
+        fontSize = 14.sp
     ),
     subtitle1 = TextStyle(
         fontFamily = FontFamily.Default,
@@ -38,8 +44,8 @@ val Typography = Typography(
     ),
     h3 = TextStyle(
         fontFamily = Gmarket,
-        fontWeight = FontWeight.Medium,
-        fontSize = 24.sp
+        fontWeight = FontWeight.Bold,
+        fontSize = 22.sp
     ),
     /* Other default text styles to override
     button = TextStyle(
