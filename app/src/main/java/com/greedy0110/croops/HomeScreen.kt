@@ -8,6 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
@@ -15,9 +16,11 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.greedy0110.croops.ui.theme.*
+import kotlin.math.max
 
 val Blue599 = Color(0xff599CEE)
 val Blue059 = Color(0x7f05196E)
@@ -27,6 +30,139 @@ data class MyScoreData(
     val names: List<String>,
     val colors: List<Color>
 )
+
+@Composable
+fun MismatchGrid(
+    modifier: Modifier = Modifier,
+    offset: Dp,
+    columnPadding: Dp,
+    rowPadding: Dp,
+    content: @Composable () -> Unit
+) {
+    val columns = 2
+
+    Layout(
+        modifier = modifier,
+        content = content
+    ) { measurables, constraints ->
+        val columnWidth = IntArray(columns) { 0 }
+        val columnHeights = IntArray(columns) { 0 }
+        columnHeights[0] = offset.roundToPx()
+
+        val placeables = measurables.mapIndexed { index, measurable ->
+            val placeable = measurable.measure(constraints)
+
+            val column = 1 - (index % columns)
+            if (index > 1) columnHeights[column] += rowPadding.roundToPx()
+            columnHeights[column] += placeable.height
+            columnWidth[column] = max(columnWidth[column], placeable.width)
+
+            placeable
+        }
+
+        val width = columnWidth
+            .sumOf { it }
+            .plus(columnPadding.roundToPx())
+            .coerceIn(constraints.minWidth.rangeTo(constraints.maxWidth))
+        val height = columnHeights.maxOrNull() ?: constraints.minHeight
+
+        val xs = intArrayOf(0, (width + columnPadding.roundToPx()) / 2)
+
+        layout(width, height) {
+            val ys = IntArray(columns) { 0 }
+            ys[0] = offset.roundToPx()
+
+            placeables.forEachIndexed { index, placeable ->
+                val column = 1 - (index % columns)
+                val x = xs[column]
+                val y = ys[column]
+                placeable.placeRelative(x, y)
+                ys[column] += placeable.height
+                ys[column] += rowPadding.roundToPx()
+            }
+        }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun PreviewCroopsList() {
+    val gaugeUnits = listOf(
+        GaugeUnit(0.14f, Color(0xffFADF4B)),
+        GaugeUnit(0.4f, Color(0xffE8E8E8)),
+        GaugeUnit(0.15f, Color(0xff1FCEA0)),
+        GaugeUnit(0.31f, Color(0xff599CEE)),
+    )
+
+    val data = MyScoreData(
+        60,
+        listOf("상추", "지토", "무화과"),
+        listOf(
+            Color(0xff1FCEA0),
+            Color(0xff599CEE),
+            Color(0xffFADF4B)
+        )
+    )
+    val croop1 = CroopData(
+        nickName = "지토",
+        kindName = "토마토",
+        days = 180,
+        temperature = 22.6f,
+        humidity = 67,
+        color = Blue599,
+        accentColor = Blue059
+    )
+
+    val croop3 = CroopData(
+        nickName = "무화과",
+        kindName = "",
+        days = 100,
+        temperature = 25f,
+        humidity = 75,
+        color = Color(0xffFADF4B),
+        accentColor = Color(0xffebb244)
+    )
+
+    val croop2 = CroopData(
+        nickName = "상추",
+        kindName = "청상추",
+        days = 24,
+        temperature = 25f,
+        humidity = 75,
+        color = Color(0xff1FCEA0),
+        accentColor = Color(0xff34B492)
+    )
+    CroopsTheme {
+        MismatchGrid(
+            modifier = Modifier.padding(18.dp),
+            offset = 44.dp,
+            columnPadding = 11.dp,
+            rowPadding = 16.dp
+        ) {
+            MyScoreCard(
+                modifier = Modifier
+                    .width(164.dp),
+                gaugeUnits = gaugeUnits,
+                data = data
+            )
+            CroopCard(
+                modifier = Modifier
+                    .width(164.dp),
+                croopData = croop1
+            )
+            CroopCard(
+                modifier = Modifier
+                    .width(164.dp),
+                croopData = croop3
+            )
+            CroopCard(
+                modifier = Modifier
+                    .width(164.dp),
+                croopData = croop2
+            )
+        }
+    }
+}
 
 @Composable
 fun MyScoreCard(
