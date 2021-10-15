@@ -11,7 +11,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
@@ -193,7 +192,7 @@ fun MyScoreCard(
                 Text(
                     modifier = Modifier.weight(1f),
                     text = "내 점수",
-                    style = MaterialTheme.typography.subtitle1,
+                    style = CroopTheme.typography.title1,
                     color = Grey2C
                 )
                 Icon(painter = painterResource(id = R.drawable.ic_arrow), contentDescription = null)
@@ -220,13 +219,13 @@ fun MyScoreCard(
                                 append("점")
                             }
                         },
-                        style = MaterialTheme.typography.h3,
+                        fontFamily = Gmarket,
                         fontWeight = FontWeight.Medium,
                         color = Blue0519
                     )
                     Text(
                         text = "\uD83C\uDF31새싹 농부",
-                        style = MaterialTheme.typography.caption,
+                        style = CroopTheme.typography.caption1,
                         fontWeight = FontWeight.SemiBold,
                         color = Grey5
                     )
@@ -261,9 +260,8 @@ fun TextWithDot(modifier: Modifier = Modifier, text: String, color: Color) {
         Spacer(modifier = Modifier.size(3.dp))
         Text(
             text = text,
-            style = MaterialTheme.typography.caption,
+            style = CroopTheme.typography.caption2,
             color = Grey4,
-            letterSpacing = 0.sp
         )
     }
 }
@@ -353,13 +351,12 @@ fun CroopCard(modifier: Modifier = Modifier, croopData: CroopData) {
                 ) {
                     Text(
                         text = nickName,
-                        fontSize = 22.sp,
+                        style = CroopTheme.typography.title1,
                         color = Color.White,
-                        fontWeight = FontWeight.Bold
                     )
                     Text(
                         text = kindName,
-                        fontSize = 14.sp,
+                        style = CroopTheme.typography.body1,
                         color = Color.White.copy(alpha = 0.7f)
                     )
                 }
@@ -377,8 +374,7 @@ fun CroopCard(modifier: Modifier = Modifier, croopData: CroopData) {
                             bottom = 2.dp
                         ),
                         text = "D+$days",
-                        fontSize = 12.sp,
-                        fontWeight = FontWeight.SemiBold,
+                        style = CroopTheme.typography.body3,
                         color = Color.White
                     )
                 }
@@ -391,22 +387,17 @@ fun CroopCard(modifier: Modifier = Modifier, croopData: CroopData) {
                     thickness = 0.5.dp
                 )
                 Row(modifier = Modifier.padding(start = 22.dp, end = 22.dp, bottom = 3.dp)) {
-                    ProvideTextStyle(
-                        value = TextStyle(
-                            color = GreyE8,
-                            fontSize = 12.sp
-                        )
-                    ) {
-                        Text(
-                            modifier = Modifier.weight(1f),
-                            text = titles[i],
-                            fontWeight = FontWeight.SemiBold
-                        )
-                        Text(
-                            text = contents[i],
-                            fontWeight = FontWeight.Normal
-                        )
-                    }
+                    Text(
+                        modifier = Modifier.weight(1f),
+                        text = titles[i],
+                        style = CroopTheme.typography.body3,
+                        color = GreyE8
+                    )
+                    Text(
+                        text = contents[i],
+                        style = CroopTheme.typography.body4,
+                        color = GreyE8
+                    )
                 }
             }
         }
@@ -427,30 +418,12 @@ fun PreviewCroopCard() {
         accentColor = Blue059
     )
 
-    val croop2 = CroopData(
-        nickName = "상추",
-        kindName = "청상추",
-        days = 24,
-        temperature = 25f,
-        humidity = 75,
-        color = Color(0xff1FCEA0),
-        accentColor = Color(0xff34B492)
-    )
-
-
     CroopsTheme {
         Row(modifier = Modifier.size(300.dp)) {
             CroopCard(
                 modifier = Modifier
-                    .fillMaxWidth(0.5f)
-                    .weight(1f),
+                    .fillMaxWidth(0.5f),
                 croopData = croop1
-            )
-            CroopCard(
-                modifier = Modifier
-                    .fillMaxWidth(0.5f)
-                    .weight(1f),
-                croopData = croop2
             )
         }
     }
